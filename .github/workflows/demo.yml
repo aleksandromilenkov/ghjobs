@@ -9,6 +9,12 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v4
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm ## path of the folder that should be cached and stored by Github
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }} ## unique key that will be used for retreiving the cache in the future and recreating that folder on the runner machine 
+          ## whenever package-lock file changes, the cache will be invalidated and a new cache will be created
       - name: Install dependencies
         run: npm ci
       - name: Lint code
@@ -23,6 +29,12 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v4
+      - name: Cache dependencies
+        uses: actions/cache@v4 ## cache actions uses one central cache
+        with:
+          path: ~/.npm ## path of the folder that should be cached and stored by Github
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }} ## unique key that will be used for retreiving the cache in the future and recreating that folder on the runner machine 
+          ## whenever package-lock file changes, the cache will be invalidated and a new cache will be created
       - name: Install dependencies
         run: npm ci
       - name: Build website
